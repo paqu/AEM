@@ -3,6 +3,7 @@ import numpy as np
 from constructive_heuristics.cycle import Cycle
 from constructive_heuristics.startegy.greedy_cycle_strategy import GreedyCycleStrategy
 from constructive_heuristics.startegy.greedy_nearest_neighbor import GreedyNearestNeighbor
+from constructive_heuristics.startegy.regret_strategy import RegretStrategy
 
 
 def main():
@@ -14,7 +15,7 @@ def main():
         [4, 4, 4, 4, 0]])
     vertex_list = np.array([0, 1, 2])
     length = Cycle.calculate_cycle_length(distance_matrix, vertex_list)
-    strategy = GreedyNearestNeighbor()
+    strategy = RegretStrategy()
     result = strategy.do_algorithm(distance_matrix)
     print(length)
     print(result)
