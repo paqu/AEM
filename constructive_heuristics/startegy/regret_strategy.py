@@ -22,7 +22,10 @@ class RegretStrategy(Strategy):
         regrets_list = np.array([])
         remaining_vertex_list = np.delete(np.arange(len(distance_matrix)), vertex_list)
         for vertex in remaining_vertex_list:
-            regret = RegretStrategy.__calculate_regret(distance_matrix, vertex, remaining_vertex_list)
+            regret = RegretStrategy.__calculate_regret(distance_matrix,
+                                                       vertex,
+                                                       np.delete(remaining_vertex_list,
+                                                                 np.where(remaining_vertex_list == vertex)))
             regrets_list = np.append(regrets_list, {'vertex': vertex, 'regret': regret})
 
         max_regret = max(regrets_list, key=lambda regret_dict: regret_dict['regret'])
