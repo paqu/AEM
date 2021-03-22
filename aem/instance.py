@@ -1,9 +1,10 @@
 import tsplib95
-
+from .strategy import Strategy
 from .utils import distance_matrix, plot_result
+import random
 
 class Instance():
-    def __init__(self, strategy, description=""):
+    def __init__(self, strategy: Strategy, description="") -> None:
         self._strategy = strategy
         self._coordinates = []
         self._labels = []
@@ -21,11 +22,11 @@ class Instance():
         self._description = description
 
     @property
-    def strategy(self):
+    def strategy(self) -> Strategy:
         return self._strategy
 
     @strategy.setter
-    def strategy(self, strategy):
+    def strategy(self, strategy: Strategy) -> None:
         self._strategy = strategy
 
     @property
@@ -52,13 +53,13 @@ class Instance():
         self._distance_matrix = distance_matrix(self._coordinates, tsplib95.distances.euclidean)
 
 
-    def run(self, num=50):
-        for i in range(num):
-            result = self._strategy.do_algorithm()
+    def run(self, num_of_iterations=50, num_of_nodes=50) -> None:
+        self._solutions = []
+        for i in random.sample(range(0, len(self._coordinates)), num_of_iterations):
+            result = self._strategy.do_algorithm(self._distance_matrix, i, num_of_nodes)
             self._solutions.append(result)
 
         self._solutions = sorted(self._solutions, key=lambda solution: solution.length)
-
 
     def get_min(self):
         return self._solutions[0].length
@@ -79,3 +80,15 @@ class Instance():
         title += "distance: " + str(self._solutions[0].length)
 
         plot_result(self._coordinates, solution_to_print, filename=filename, title=title)
+
+    def show_stats(self):
+        cycle_labels = []
+        for i in self._solutions[0].cycle:
+            cycle_labels.append(str(self._labels[i]))
+
+        print(f"MIN:{self.get_min()}")
+        print(f"MAX:{self.get_max()}")
+        print(f"AVG:{self.get_avg()}")
+
+        print("Cycle:")
+        print(cycle_labels)
